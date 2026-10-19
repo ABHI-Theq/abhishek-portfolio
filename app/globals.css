@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design Tokens ──────────────────────────────────────────── */
+:root {
+  --bg-main: #080807;
+  --bg-secondary: #100d0a;
+  --card-surface: #171512;
+  --card-elevated: #211812;
+  --border: #393027;
+  --text-primary: #f1e9df;
+  --text-secondary: #bdb2a6;
+  --text-muted: #93877b;
+  --accent: #f0783e;
+  --accent-hover: #ff9258;
+}
+
+/* ── Base Reset ─────────────────────────────────────────────── */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+    font-family: var(--font-inter), system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* Fluid hero headline typography */
+  .hero-headline {
+    font-size: clamp(3.5rem, 8vw, 7rem); /* 56px → 112px */
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+  }
+
+  /* Reduced motion: suppress all transitions and animations */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+
+    /* Hero entrance animations — show final state immediately (req 3.6, 13.4) */
+    .hero-animate {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+}
+
+/* ── Hero visual animations ─────────────────────────────────── */
+
+/* Portrait filter — desaturated, high contrast, bleeds into dark bg */
+.hero-portrait {
+  filter: grayscale(100%) contrast(1.2) brightness(0.88);
+  mix-blend-mode: luminosity;
+}
+
+/* Gentle float for the whole card */
+@keyframes hero-float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+
+/* Accent dot pulse glow */
+@keyframes dot-pulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 20px 6px color-mix(in srgb, var(--accent) 40%, transparent); }
+  50%       { opacity: 0.6; box-shadow: 0 0 36px 14px color-mix(in srgb, var(--accent) 20%, transparent); }
+}
+
+/* Character grid flicker — individual chars */
+@keyframes char-flicker {
+  0%, 90%, 100% { opacity: var(--char-base-opacity, 0.2); }
+  95%           { opacity: 0.6; }
+}
+
+/* Scanning line sweep */
+@keyframes scan-line {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 0.12; }
+  90%  { opacity: 0.12; }
+  100% { transform: translateY(400%); opacity: 0; }
+}
+
+.hero-visual-card {
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+.hero-dot-pulse {
+  animation: dot-pulse 3s ease-in-out infinite;
+}
+
+.hero-scan-line {
+  animation: scan-line 4s linear infinite;
+}
+
+/* Reduced motion: disable all hero visual animations */
+@media (prefers-reduced-motion: reduce) {
+  .hero-visual-card,
+  .hero-dot-pulse,
+  .hero-scan-line {
+    animation: none !important;
+  }
+}
+/* ── Utilities ──────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
