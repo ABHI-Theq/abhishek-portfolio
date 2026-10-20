@@ -168,3 +168,153 @@
     text-wrap: balance;
   }
 }
+
+/* ── Project Archive ("More Projects") — scoped interaction styles ─── */
+/* Hover effects are gated behind (hover: hover) so touch devices never get
+   "stuck" hover states; reduced-motion modes disable transforms (movement)
+   while keeping color/opacity changes and all content. */
+@layer utilities {
+  .archive-card {
+    transition:
+      transform var(--dur-base) var(--ease-out),
+      border-color var(--dur-base) var(--ease-out);
+  }
+  .archive-accent-bar {
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .archive-number {
+    transition: color var(--dur-base) var(--ease-out);
+  }
+  .archive-link-underline {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .archive-arrow {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  .archive-signal {
+    opacity: 0.35;
+    transition: opacity var(--dur-base) var(--ease-out);
+  }
+  .archive-preview-cursor {
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+
+  /* Preview entrance settle — fires when the card's FadeIn wrapper is in view */
+  .archive-preview {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity var(--dur-reveal) var(--ease-out),
+      transform var(--dur-reveal) var(--ease-out);
+  }
+  .archive-preview svg {
+    transform-origin: center;
+    transition: transform var(--dur-slow) var(--ease-out);
+  }
+  [data-visible="true"] .archive-preview {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 140ms;
+  }
+
+  /* Heading divider — expands once the intro wrapper is in view */
+  .archive-divider {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-slow) var(--ease-out) 80ms;
+  }
+  [data-visible="true"] .archive-divider {
+    transform: scaleX(1);
+  }
+
+  /* Coordinated hover — only on hover-capable pointers */
+  @media (hover: hover) and (pointer: fine) {
+    .archive-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .archive-card:hover .archive-accent-bar {
+      transform: scaleY(1);
+    }
+    .archive-card:hover .archive-preview svg {
+      transform: scale(1.04);
+    }
+    .archive-card:hover .archive-signal {
+      opacity: 1;
+    }
+    .archive-card:hover .archive-preview-cursor {
+      transform: translateX(5px);
+    }
+    .archive-card:hover .archive-number {
+      color: var(--accent);
+    }
+    .archive-card:hover .archive-link-underline {
+      transform: scaleX(1);
+    }
+    .archive-card:hover .archive-arrow {
+      transform: translate(2px, -2px);
+    }
+    .archive-link:hover .archive-link-underline,
+    .archive-link:focus-visible .archive-link-underline {
+      transform: scaleX(1);
+    }
+    .archive-link:hover .archive-arrow {
+      transform: translate(2px, -2px);
+    }
+  }
+
+  /* Reduced motion (OS): show final states, disable movement */
+  @media (prefers-reduced-motion: reduce) {
+    .archive-preview {
+      opacity: 1 !important;
+      transform: none !important;
+      transition: none !important;
+    }
+    [data-visible="true"] .archive-preview {
+      transition-delay: 0ms !important;
+    }
+    .archive-divider {
+      transform: scaleX(1) !important;
+      transition: none !important;
+    }
+    @media (hover: hover) and (pointer: fine) {
+      .archive-card:hover,
+      .archive-card:hover .archive-preview svg,
+      .archive-card:hover .archive-accent-bar,
+      .archive-card:hover .archive-preview-cursor,
+      .archive-card:hover .archive-arrow,
+      .archive-card:hover .archive-link-underline,
+      .archive-link:hover .archive-link-underline,
+      .archive-link:focus-visible .archive-link-underline,
+      .archive-link:hover .archive-arrow {
+        transform: none !important;
+      }
+    }
+  }
+
+  /* Reduced motion (site toggle — data-motion="reduced" on <html>) */
+  [data-motion="reduced"] .archive-preview {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+  [data-motion="reduced"] [data-visible="true"] .archive-preview {
+    transition-delay: 0ms !important;
+  }
+  [data-motion="reduced"] .archive-divider {
+    transform: scaleX(1) !important;
+    transition: none !important;
+  }
+  [data-motion="reduced"] .archive-card:hover,
+  [data-motion="reduced"] .archive-card:hover .archive-preview svg,
+  [data-motion="reduced"] .archive-card:hover .archive-accent-bar,
+  [data-motion="reduced"] .archive-card:hover .archive-preview-cursor,
+  [data-motion="reduced"] .archive-card:hover .archive-arrow,
+  [data-motion="reduced"] .archive-card:hover .archive-link-underline {
+    transform: none !important;
+  }
+}

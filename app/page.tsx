@@ -67,9 +67,9 @@ export default function Home() {
       {/* Experience & Education */}
       <ExperienceSection />
 
-      <SectionSeparator label="Achievements" />
+      <SectionSeparator label="Problem Solving" />
 
-      {/* Achievements */}
+      {/* Problem Solving */}
       <AchievementsSection />
 
       <SectionSeparator label="About" />

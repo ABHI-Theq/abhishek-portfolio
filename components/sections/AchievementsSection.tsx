@@ -35,7 +35,7 @@ export function AchievementsSection() {
               id="achievements-heading"
               className="font-display text-3xl text-[var(--text-primary)]"
             >
-              Achievements
+              Problem Solving
             </h2>
           </div>
         </FadeIn>

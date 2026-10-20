@@ -86,7 +86,7 @@ describe("Property 13: individual section heading structure", () => {
 
     expect(h1s).toHaveLength(0);
     expect(h2s).toHaveLength(1);
-    expect(h2s[0].text).toContain("Achievements");
+    expect(h2s[0].text).toContain("Problem Solving");
     for (const h3 of h3s) {
       expect(h3.position).toBeGreaterThan(h2s[0].position);
     }

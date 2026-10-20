@@ -117,19 +117,87 @@ export function BentoGrid({ projects }: BentoGridProps) {
           </div>
         )}
 
-        {/* ── Secondary grid ─────────────────────────────────────── */}
+        {/* ── Secondary grid — "More Projects" selected archive ─── */}
         {visibleSecondary.length > 0 && (
           <div data-section="secondary">
-            <h3 className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)] mb-6">
-              More Projects
-            </h3>
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-              {visibleSecondary.map((project, index) => (
-                <FadeIn key={project.slug} delay={index * 80} data-secondary-card-index={String(index)} data-secondary-item={project.slug}>
-                  <ProjectCard project={project} />
-                </FadeIn>
-              ))}
+            {/* Section intro: eyebrow, heading, supporting copy, live count */}
+            <FadeIn>
+              <div className="mb-10">
+                <div className="flex items-start justify-between gap-6">
+                  <div className="flex flex-col gap-3">
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+                      More Projects / Selected Archive
+                    </span>
+                    <h3 className="font-display text-2xl text-[var(--text-primary)] leading-tight text-balance sm:text-3xl">
+                      More things I&apos;ve built.
+                    </h3>
+                    <p className="max-w-xl text-sm leading-relaxed text-[var(--text-secondary)]">
+                      A selection of software projects, experiments, and applied
+                      AI work. Open any case study for the full architecture and
+                      engineering notes.
+                    </p>
+                  </div>
+
+                  {/* live project count, computed from displayed data */}
+                  <div className="hidden shrink-0 flex-col items-end gap-1 pt-1 sm:flex">
+                    <span className="font-mono text-2xl leading-none text-[var(--text-primary)]">
+                      {String(visibleSecondary.length).padStart(2, "0")}
+                      {visibleSecondary.length !== secondaryProjects.length && (
+                        <span className="text-base text-[var(--text-muted)]">
+                          {" "}
+                          / {String(secondaryProjects.length).padStart(2, "0")}
+                        </span>
+                      )}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)]">
+                      Projects
+                    </span>
+                  </div>
+                </div>
+
+                {/* animated divider — expands once the intro is in view */}
+                <div
+                  aria-hidden="true"
+                  className="archive-divider mt-6 h-px w-full bg-[var(--border)]"
+                />
+              </div>
+            </FadeIn>
+
+            {/* grid */}
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 lg:gap-6">
+              {visibleSecondary.map((project, index) => {
+                // Stable archive number (04–12) keyed to the full secondary list,
+                // independent of the active filter so indices never imply ranking.
+                const stableIndex = secondaryProjects.indexOf(project);
+                const displayNumber = String(
+                  featuredProjects.length + stableIndex + 1
+                ).padStart(2, "0");
+                return (
+                  <FadeIn
+                    key={project.slug}
+                    delay={index * 80}
+                    data-secondary-card-index={String(index)}
+                    data-secondary-item={project.slug}
+                  >
+                    <ProjectCard project={project} displayNumber={displayNumber} />
+                  </FadeIn>
+                );
+              })}
             </div>
+
+            {/* deliberate archive ending before the Skills transition */}
+            <FadeIn delay={Math.min(visibleSecondary.length, 6) * 80 + 120}>
+              <div
+                className="mt-16 flex items-center justify-center gap-4"
+                aria-hidden="true"
+              >
+                <span className="h-px w-16 bg-[var(--border)]" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--text-muted)]">
+                  End of selected archive
+                </span>
+                <span className="h-px w-16 bg-[var(--border)]" />
+              </div>
+            </FadeIn>
           </div>
         )}
 

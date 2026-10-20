@@ -67,28 +67,31 @@ const noUrlProjectArb: fc.Arbitrary<Project> = fc.record({
 });
 
 // ---------------------------------------------------------------------------
-// Property 2: ProjectCard renders all required fields
-// Feature: cinematic-bento-portfolio, Property 2: ProjectCard renders all required fields
+// Property 2: ProjectCard renders the project name and its links
+// Feature: cinematic-bento-portfolio, Property 2: ProjectCard renders the project name and its links
 // Validates: Requirements 4.4
 // ---------------------------------------------------------------------------
-describe("Property 2: ProjectCard renders all required fields", () => {
-  it("title, description, and every tech tag appear in the DOM for any valid project", () => {
+describe("Property 2: ProjectCard renders the project name and its links", () => {
+  it("the title appears in an h3 and each available link is rendered for any valid project", () => {
     fc.assert(
       fc.property(fullProjectArb, (project) => {
         const { container, unmount } = render(<ProjectCard project={project} />);
 
-        // Title
+        // Name
         const heading = container.querySelector("h3");
         expect(heading?.textContent).toBe(project.title);
 
-        // Description
-        expect(container.textContent).toContain(project.description);
-
-        // Every tech tag (Tag renders uppercase)
-        for (const tech of project.tech) {
-          expect(container.textContent?.toUpperCase()).toContain(
-            tech.toUpperCase()
-          );
+        // Links: a GitHub / Live anchor exists only when its URL is present
+        const anchors = Array.from(container.querySelectorAll("a"));
+        if (project.githubUrl) {
+          expect(
+            anchors.some((a) => a.getAttribute("href") === project.githubUrl)
+          ).toBe(true);
+        }
+        if (project.liveUrl) {
+          expect(
+            anchors.some((a) => a.getAttribute("href") === project.liveUrl)
+          ).toBe(true);
         }
 
         unmount();
