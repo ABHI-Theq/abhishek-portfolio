@@ -1,55 +1,59 @@
 import { skillGroups } from "@/data/skills";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /**
- * SkillsSection — compact inline layout.
- * Group label on the left, skills as comma-separated inline text on the right.
+ * SkillsSection — two-panel pill layout.
+ * Left column: group label (DM Serif Display) + mono sub-label.
+ * Right column: skill pills with border/bg-secondary styling.
  * No progress bars, no fake proficiency scores.
- * Requirements: 6.1, 6.2, 6.3
+ * Requirements: 7.1, 7.2, 7.3, 7.4
  */
 export function SkillsSection() {
   return (
     <section id="skills" aria-labelledby="skills-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
         {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            02
-          </span>
-          <h2
-            id="skills-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
-          >
-            Skills
-          </h2>
-        </div>
-
-        {/* Compact skill rows */}
-        <div className="divide-y divide-[var(--border)] border-y border-[var(--border)]">
-          {skillGroups.map((group) => (
-            <div
-              key={group.label}
-              className="grid grid-cols-1 gap-2 py-4 sm:grid-cols-[200px_1fr] sm:gap-6 sm:items-start"
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              02
+            </span>
+            <h2
+              id="skills-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
             >
-              {/* Group label */}
-              <h3 className="font-mono text-[10px] uppercase tracking-[0.18em] text-[var(--text-muted)] pt-0.5">
-                {group.label}
-              </h3>
+              Skills
+            </h2>
+          </div>
+        </FadeIn>
 
-              {/* Skills — inline with dot separators */}
-              <ul className="flex flex-wrap gap-x-3 gap-y-1.5" role="list">
-                {group.skills.map((skill, i) => (
-                  <li
-                    key={skill}
-                    className="flex items-center gap-3 text-sm text-[var(--text-secondary)]"
-                  >
-                    {skill}
-                    {i < group.skills.length - 1 && (
-                      <span aria-hidden="true" className="h-1 w-1 rounded-full bg-[var(--border)]" />
-                    )}
-                  </li>
-                ))}
-              </ul>
-            </div>
+        {/* Two-panel skill rows */}
+        <div>
+          {skillGroups.map((group, index) => (
+            <FadeIn key={group.label} delay={index * 60} data-skill-group-index={String(index)}>
+              <div className="border-t border-[var(--border)] py-8 grid grid-cols-1 gap-4 sm:grid-cols-[220px_1fr] sm:gap-8 sm:items-start">
+                {/* Left panel: group label + mono sub-label */}
+                <div>
+                  <h3 className="font-display text-2xl text-[var(--text-primary)]">
+                    {group.label}
+                  </h3>
+                  <p className="font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] mt-1">
+                    {group.skills.length} skills
+                  </p>
+                </div>
+
+                {/* Right panel: skill pills */}
+                <ul className="flex flex-wrap gap-2" role="list">
+                  {group.skills.map((skill) => (
+                    <li key={skill}>
+                      <span className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-1 text-sm rounded-tag text-[var(--text-secondary)]">
+                        {skill}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </FadeIn>
           ))}
         </div>
       </div>

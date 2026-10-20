@@ -1,27 +1,96 @@
+import { FadeIn } from "@/components/ui/FadeIn";
+
+/**
+ * RAGPipelineDiagram — purely decorative CSS-only pipeline diagram.
+ * aria-hidden="true" — the surrounding prose provides equivalent information.
+ * Requirements: 6.1, 6.2, 6.3, 6.4
+ */
+function RAGPipelineDiagram() {
+  return (
+    <div
+      aria-hidden="true"
+      className="rounded-lg border border-[var(--border)] bg-[var(--bg-secondary)] p-4 lg:p-6 overflow-hidden"
+      data-testid="rag-pipeline-diagram"
+    >
+      {/* Desktop: horizontal flexbox row — hidden below md */}
+      <div className="hidden md:flex items-center gap-1 font-mono text-[11px] flex-wrap justify-center">
+        {/* Query */}
+        <span className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)] whitespace-nowrap">
+          Query
+        </span>
+        <span className="text-[var(--text-muted)]">→</span>
+        {/* Uncertainty Estimator */}
+        <span className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)] whitespace-nowrap">
+          Uncertainty Estimator
+        </span>
+        <span className="text-[var(--text-muted)]">→</span>
+        {/* Decision Gate */}
+        <span className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)] whitespace-nowrap">
+          Decision Gate
+        </span>
+        <span className="text-[var(--text-muted)]">→</span>
+        {/* Fork: Retrieve + Skip stacked */}
+        <div className="flex flex-col gap-1">
+          <span className="border border-[var(--accent)] rounded px-2 py-1 text-[var(--accent)] whitespace-nowrap">
+            Retrieve
+          </span>
+          <span className="border border-[var(--text-muted)] rounded px-2 py-1 text-[var(--text-muted)] opacity-60 whitespace-nowrap">
+            Skip
+          </span>
+        </div>
+        <span className="text-[var(--text-muted)]">→</span>
+        {/* Generator */}
+        <span className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)] whitespace-nowrap">
+          Generator
+        </span>
+        <span className="text-[var(--text-muted)]">→</span>
+        {/* Response */}
+        <span className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)] whitespace-nowrap">
+          Response
+        </span>
+      </div>
+
+      {/* Mobile: vertical list — shown below md */}
+      <ul className="flex flex-col gap-2 font-mono text-[11px] md:hidden">
+        <li className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)]">Query</li>
+        <li className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)]">Uncertainty Estimator</li>
+        <li className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)]">Decision Gate</li>
+        <li className="border border-[var(--accent)] rounded px-2 py-1 text-[var(--accent)]">Retrieve</li>
+        <li className="border border-[var(--text-muted)] rounded px-2 py-1 text-[var(--text-muted)] opacity-60">Skip</li>
+        <li className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)]">Generator</li>
+        <li className="border border-[var(--border)] rounded px-2 py-1 text-[var(--text-secondary)]">Response</li>
+      </ul>
+    </div>
+  );
+}
+
 /**
  * ResearchSection — server component
  * Renders the SmartRAG research card.
  * Clearly separates verified completed work from hypotheses/future experiments.
- * Requirements: 7.1, 7.2, 7.3
+ * Requirements: 7.1, 7.2, 7.3, 5.4
  */
 export function ResearchSection() {
   return (
     <section id="research" aria-labelledby="research-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
         {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            03
-          </span>
-          <h2
-            id="research-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
-          >
-            Research
-          </h2>
-        </div>
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              03
+            </span>
+            <h2
+              id="research-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
+            >
+              Research
+            </h2>
+          </div>
+        </FadeIn>
 
-        {/* SmartRAG card */}
+        {/* SmartRAG card — single FadeIn unit */}
+        <FadeIn>
         <article
           aria-label="SmartRAG research project"
           className="rounded-card border border-[var(--border)] bg-[var(--card-surface)] p-8 lg:p-10"
@@ -54,6 +123,14 @@ export function ResearchSection() {
               retrieval gating to selectively invoke the retrieval pipeline only when it is likely
               to be beneficial.
             </p>
+          </div>
+
+          {/* RAG Pipeline Diagram — placed between problem statement and completed/hypotheses grid */}
+          <div className="mb-8">
+            <h4 className="mb-3 font-mono text-[10px] uppercase tracking-[0.15em] text-[var(--text-muted)]">
+              Pipeline Architecture
+            </h4>
+            <RAGPipelineDiagram />
           </div>
 
           {/* Two-column grid: Completed ↔ Hypotheses */}
@@ -138,6 +215,7 @@ export function ResearchSection() {
             ))}
           </footer>
         </article>
+        </FadeIn>
       </div>
     </section>
   );

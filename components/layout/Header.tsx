@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { profile } from "@/data/profile";
+import { MotionToggle } from "@/components/ui/MotionToggle";
 
 // ── Nav links ───────────────────────────────────────────────────
 const NAV_LINKS = [
@@ -42,7 +43,7 @@ function LinkedInIcon({ className }: { className?: string }) {
       aria-hidden="true"
       className={className}
     >
-      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 23.2 0 22.222 0h.003z" />
     </svg>
   );
 }
@@ -51,6 +52,7 @@ function LinkedInIcon({ className }: { className?: string }) {
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>("");
 
   // Scroll listener — apply backdrop at 80px
   useEffect(() => {
@@ -58,6 +60,33 @@ export function Header() {
     onScroll(); // initial check
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Active section tracking via IntersectionObserver
+  useEffect(() => {
+    const sectionIds = NAV_LINKS.map(({ href }) => href.slice(1));
+    const observers: IntersectionObserver[] = [];
+
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (!el) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveSection(id);
+            }
+          });
+        },
+        { threshold: 0.3, rootMargin: "-64px 0px -40% 0px" }
+      );
+
+      observer.observe(el);
+      observers.push(observer);
+    });
+
+    return () => observers.forEach((o) => o.disconnect());
   }, []);
 
   // Close drawer on Escape key
@@ -103,18 +132,32 @@ export function Header() {
             aria-label="Main navigation"
             className="hidden items-center gap-8 md:flex"
           >
-            {NAV_LINKS.map(({ label, href }) => (
-              <a
-                key={href}
-                href={href}
-                className="text-sm text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
-              >
-                {label}
-              </a>
-            ))}
+            {NAV_LINKS.map(({ label, href }) => {
+              const sectionId = href.slice(1);
+              const isActive = activeSection === sectionId;
+              return (
+                <a
+                  key={href}
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "relative text-sm transition-colors duration-200",
+                    "after:absolute after:bottom-[-2px] after:left-0 after:h-px after:w-full after:bg-[var(--accent)]",
+                    "after:scale-x-0 after:origin-left after:transition-transform after:duration-[var(--dur-base)]",
+                    "hover:after:scale-x-100",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]",
+                    isActive
+                      ? "text-[var(--accent)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  )}
+                >
+                  {label}
+                </a>
+              );
+            })}
           </nav>
 
-          {/* Desktop: icon links + CTA */}
+          {/* Desktop: icon links + MotionToggle + CTA */}
           <div className="hidden items-center gap-4 md:flex">
             <a
               href={profile.github}
@@ -134,9 +177,10 @@ export function Header() {
             >
               <LinkedInIcon />
             </a>
+            <MotionToggle />
             <a
               href="#contact"
-              className="rounded-full border border-[var(--accent)] px-4 py-1.5 text-sm text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--bg-main)] transition-all duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
+              className="rounded-full border border-[var(--accent)] px-4 py-1.5 text-sm text-[var(--accent)] hover:bg-[var(--accent)] hover:text-[var(--bg-main)] transition-all duration-[var(--dur-fast)] hover:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[var(--accent)]"
             >
               Let&apos;s talk
             </a>
@@ -152,7 +196,6 @@ export function Header() {
             className="flex h-11 w-11 items-center justify-center rounded-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] transition-colors md:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             {menuOpen ? (
-              /* X icon */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -169,7 +212,6 @@ export function Header() {
                 <line x1="6" y1="6" x2="18" y2="18" />
               </svg>
             ) : (
-              /* Hamburger icon */
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="20"
@@ -205,23 +247,35 @@ export function Header() {
         id="mobile-menu"
         aria-label="Mobile navigation"
         className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-[var(--card-surface)] border-l border-[var(--border)] px-6 pt-20 pb-8 transition-transform duration-300 md:hidden",
+          "fixed inset-y-0 right-0 z-50 flex w-72 flex-col bg-[var(--card-surface)] border-l border-[var(--border)] px-6 pt-20 pb-8 transition-transform duration-[var(--dur-base)] md:hidden",
           menuOpen ? "translate-x-0" : "translate-x-full"
         )}
         aria-hidden={!menuOpen}
       >
         <ul className="flex flex-col gap-2">
-          {NAV_LINKS.map(({ label, href }) => (
-            <li key={href}>
-              <a
-                href={href}
-                onClick={closeMenu}
-                className="block rounded-md px-3 py-3 text-lg text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--card-elevated)] transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
-              >
-                {label}
-              </a>
-            </li>
-          ))}
+          {NAV_LINKS.map(({ label, href }) => {
+            const sectionId = href.slice(1);
+            const isActive = activeSection === sectionId;
+            return (
+              <li key={href}>
+                <a
+                  href={href}
+                  onClick={closeMenu}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "block rounded-md px-3 py-3 text-lg transition-colors duration-200",
+                    "hover:bg-[var(--card-elevated)]",
+                    "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]",
+                    isActive
+                      ? "text-[var(--accent)]"
+                      : "text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
+                  )}
+                >
+                  {label}
+                </a>
+              </li>
+            );
+          })}
         </ul>
 
         <div className="mt-8 flex flex-col gap-4 border-t border-[var(--border)] pt-8">
@@ -246,6 +300,9 @@ export function Header() {
               <LinkedInIcon />
             </a>
           </div>
+
+          {/* MotionToggle in mobile drawer */}
+          <MotionToggle />
 
           {/* CTA */}
           <a

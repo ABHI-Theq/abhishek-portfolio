@@ -1,27 +1,30 @@
 import { experience, education } from "@/data/experience";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /**
  * ExperienceSection — server component
  * Renders work experience and education cards from data/experience.ts.
  * All content is sourced strictly from the resume data — no invented entries.
- * Requirements: 8.1, 8.2, 8.3
+ * Requirements: 8.1, 8.2, 8.3, 5.5
  */
 export function ExperienceSection() {
   return (
     <section id="experience" aria-labelledby="experience-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
         {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            04
-          </span>
-          <h2
-            id="experience-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
-          >
-            Experience &amp; Education
-          </h2>
-        </div>
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              04
+            </span>
+            <h2
+              id="experience-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
+            >
+              Experience &amp; Education
+            </h2>
+          </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           {/* Work Experience */}
@@ -30,9 +33,9 @@ export function ExperienceSection() {
               Work Experience
             </h3>
             <div className="flex flex-col gap-4">
-              {experience.map((entry) => (
+              {experience.map((entry, index) => (
+                <FadeIn key={`${entry.company}-${entry.period}`} delay={index * 80}>
                 <article
-                  key={`${entry.company}-${entry.period}`}
                   className="rounded-card border border-[var(--border)] bg-[var(--card-surface)] p-6"
                   aria-label={`${entry.role} at ${entry.company}`}
                 >
@@ -66,6 +69,7 @@ export function ExperienceSection() {
                     ))}
                   </ul>
                 </article>
+                </FadeIn>
               ))}
             </div>
           </div>
@@ -76,9 +80,9 @@ export function ExperienceSection() {
               Education
             </h3>
             <div className="flex flex-col gap-4">
-              {education.map((entry) => (
+              {education.map((entry, index) => (
+                <FadeIn key={`${entry.institution}-${entry.period}`} delay={index * 80}>
                 <article
-                  key={`${entry.institution}-${entry.period}`}
                   className="rounded-card border border-[var(--border)] bg-[var(--card-surface)] p-6"
                   aria-label={`${entry.degree} at ${entry.institution}`}
                 >
@@ -122,6 +126,7 @@ export function ExperienceSection() {
                     </div>
                   </div>
                 </article>
+                </FadeIn>
               ))}
             </div>
           </div>

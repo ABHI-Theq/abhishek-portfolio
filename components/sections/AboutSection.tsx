@@ -1,4 +1,5 @@
 import { profile } from "@/data/profile";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /**
  * AboutSection — server component
@@ -11,17 +12,19 @@ export function AboutSection() {
     <section id="about" aria-labelledby="about-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
         {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            06
-          </span>
-          <h2
-            id="about-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
-          >
-            About
-          </h2>
-        </div>
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              06
+            </span>
+            <h2
+              id="about-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
+            >
+              About
+            </h2>
+          </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-center">
           {/* Summary paragraph */}

@@ -19,6 +19,25 @@ export const metadata: Metadata = buildMetadata({
 });
 
 /**
+ * Thin horizontal separator between major page sections.
+ * Requirement 8.1 — full-width thin border-t line with optional centered label.
+ */
+function SectionSeparator({ label }: { label?: string }) {
+  return (
+    <div
+      aria-hidden="true"
+      className="relative border-t border-[var(--border)] mx-6 lg:mx-8"
+    >
+      {label && (
+        <span className="absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/2 bg-[var(--bg-main)] px-3 font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)]">
+          {label}
+        </span>
+      )}
+    </div>
+  );
+}
+
+/**
  * Homepage — assembles all sections in order.
  * Requirements: 3.3, 12.3, 12.4
  */
@@ -28,23 +47,37 @@ export default function Home() {
       {/* Hero */}
       <HeroSection />
 
+      <SectionSeparator label="Projects" />
+
       {/* Projects bento grid — BentoGrid renders id="projects" internally */}
       <BentoGrid projects={projects} />
+
+      <SectionSeparator label="Skills" />
 
       {/* Skills */}
       <SkillsSection />
 
+      <SectionSeparator label="Research" />
+
       {/* Research */}
       <ResearchSection />
+
+      <SectionSeparator label="Experience" />
 
       {/* Experience & Education */}
       <ExperienceSection />
 
+      <SectionSeparator label="Achievements" />
+
       {/* Achievements */}
       <AchievementsSection />
 
+      <SectionSeparator label="About" />
+
       {/* About — id="about" anchor for header nav */}
       <AboutSection />
+
+      <SectionSeparator label="Contact" />
 
       {/* Contact — id="contact" anchor for header nav */}
       <ContactSection />

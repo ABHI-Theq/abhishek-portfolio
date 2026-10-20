@@ -1,4 +1,5 @@
 import { profile } from "@/data/profile";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /** Hackathon results — sourced directly from resume (req 9.2) */
 const hackathons = [
@@ -25,17 +26,19 @@ export function AchievementsSection() {
     <section id="achievements" aria-labelledby="achievements-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
         {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            05
-          </span>
-          <h2
-            id="achievements-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
-          >
-            Achievements
-          </h2>
-        </div>
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              05
+            </span>
+            <h2
+              id="achievements-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
+            >
+              Achievements
+            </h2>
+          </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* ── LeetCode Stats card ──────────────────────────── */}

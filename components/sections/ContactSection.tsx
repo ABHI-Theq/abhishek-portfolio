@@ -1,4 +1,5 @@
 import { profile } from "@/data/profile";
+import { FadeIn } from "@/components/ui/FadeIn";
 
 /**
  * ContactSection — server component
@@ -10,18 +11,31 @@ export function ContactSection() {
   return (
     <section id="contact" aria-labelledby="contact-heading" className="px-6 py-24 lg:px-8">
       <div className="mx-auto max-w-bento">
-        {/* Section header */}
-        <div className="mb-12 flex items-baseline gap-4">
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
-            07
-          </span>
-          <h2
-            id="contact-heading"
-            className="font-display text-3xl text-[var(--text-primary)]"
+        {/* Closing headline — Requirement 9.1 */}
+        <FadeIn>
+          <p
+            className="font-display text-[var(--text-primary)] mb-12"
+            style={{ fontSize: "clamp(48px, 6vw, 96px)" }}
           >
-            Get in Touch
-          </h2>
-        </div>
+            Let&apos;s build{" "}
+            <span className="text-[var(--accent)]">something.</span>
+          </p>
+        </FadeIn>
+
+        {/* Section header */}
+        <FadeIn>
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[var(--accent)]">
+              07
+            </span>
+            <h2
+              id="contact-heading"
+              className="font-display text-3xl text-[var(--text-primary)]"
+            >
+              Get in Touch
+            </h2>
+          </div>
+        </FadeIn>
 
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
           {/* Intro copy */}

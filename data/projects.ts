@@ -17,6 +17,7 @@ export interface Project {
   githubUrl?: string;
   liveUrl?: string;
   featured?: boolean;
+  image?: string; // path relative to /public, e.g. "/projects/zerko.png"
   category: "fullstack" | "ai" | "research" | "tool" | "ml" | "dl";
 }
 
@@ -80,69 +81,69 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/ABHI-Theq/Zerko",
     liveUrl: "https://zerko.vercel.app/",
     featured: true,
+    image: "/projects/zerko.png",
     category: "ai",
   },
 
-  // ── 02 LiveCode ────────────────────────────────────────────────
+  // ── 02 HitchAI (Agios) ────────────────────────────────────────
   {
-    slug: "livecode",
-    title: "LiveCode",
-    tagline: "Browser IDE with local AI assistance",
+    slug: "agios",
+    title: "HitchAI",
+    tagline: "Agentic technical blog generator",
     description:
-      "In-browser code editor and project playground — Monaco editor, WebContainer Node.js runtime, and context-aware AI suggestions served locally through Ollama for privacy.",
+      "Turns a single topic into a publication-ready technical blog post using a LangGraph multi-agent pipeline — adaptive research, parallel section writing, image generation, and format validation.",
     problem:
-      "Setting up a development environment is a barrier. LiveCode runs the editor, the terminal and a Node.js runtime entirely in the browser, and keeps AI assistance local through Ollama.",
-    highlights: [
-      "Developed a real-time collaborative code editor using React, Node.js, and Socket.IO to handle bi-directional document sync across concurrent user sessions.",
-      "Integrated the remote Piston execution engine API to compile, execute, and stream output for 15+ programming languages in the browser.",
-      "Designed an event-driven backend state manager in Express.js to track room membership, handle dropped connections, and preserve state synchronization.",
-    ],
+      "A single LLM call asked to research, plan, write, and format a long article tends to drift, repeat itself and be hard to debug. HitchAI splits the work into independent, typed stages so each step can be checked on its own.",
     features: [
       {
-        name: "Multi-template projects",
+        name: "Adaptive research",
         detail:
-          "Start from React, Next.js, Express, Vue, Angular, or Hono templates with automatic framework detection.",
+          "Router classifies the topic as closed_book, hybrid, or open_book and dispatches 3–10 Tavily search queries. Results are deduplicated by URL into a typed evidence pack.",
       },
       {
-        name: "In-browser runtime",
+        name: "Grounded parallel writing",
         detail:
-          "WebContainer provides a full Node.js environment, integrated terminal, and live preview — no server required.",
+          "LangGraph's Send API fans one worker out per section. Each worker only sees its own task and the evidence it is allowed to cite.",
       },
       {
-        name: "Editor workspace",
+        name: "Deterministic reducer",
         detail:
-          "Monaco Editor with IntelliSense, a Radix UI file explorer (create, edit, delete, rename), and resizable panels.",
+          "A subgraph sorts and concatenates sections with plain code, then plans images, generates them, and validates the result — no LLM for the merge step.",
       },
       {
-        name: "AI code suggestions",
+        name: "Scarce, planned images",
         detail:
-          "Suggestions on typing, new lines, and trigger characters, framework-aware and togglable. Processing stays local through Ollama (CodeLlama).",
+          "An image planner reads the whole article and chooses at most 3 diagrams; generation failures degrade to a visible warning, not a failed run.",
       },
       {
-        name: "Accounts and projects",
+        name: "Format-only validation",
         detail:
-          "GitHub and Google sign-in with NextAuth v5 and a dashboard to manage saved projects.",
+          "Gemini repairs unclosed code fences, heading levels, malformed tables, and raw LaTeX at temperature 0 under a no-content-changes contract.",
+      },
+      {
+        name: "Streamlit dashboard",
+        detail:
+          "Blog history, live progress, word count and reading time, preview, image gallery, and downloads — all backed by the file system.",
       },
     ],
     architecture:
-      "A Next.js App Router application whose API routes handle projects, templates, and the AI suggestion endpoint. Monaco Editor with a Zustand-managed AI overlay sits client-side; WebContainer runs the Node.js runtime in the browser. Ollama serves CodeLlama locally. Data persisted via Prisma ORM on PostgreSQL.",
+      "Main LangGraph graph: Router (GPT-4.1 mini, structured output) → Research (Tavily) → Orchestrator (builds a 4–6 task Plan) → Workers (one section each via Send fan-out). Reducer subgraph: merge_content (no LLM) → decide_images (GPT-4.1 mini) → generate_and_place_images (GPT Image 1) → markdown_validator (Gemini). Typed state: Plan, Task, EvidenceItem, EvidencePack, RouterDecision, GlobalImagePlan.",
     tech: [
-      "Next.js 15",
-      "TypeScript",
-      "Monaco Editor",
-      "WebContainer",
-      "Ollama",
-      "CodeLlama",
-      "Prisma",
-      "PostgreSQL",
-      "NextAuth.js v5",
-      "Zustand",
+      "LangGraph",
+      "LangChain",
+      "GPT-4.1 mini",
+      "GPT Image 1",
+      "Gemini",
+      "Tavily Search",
+      "Pydantic",
+      "Python 3.11",
+      "Streamlit",
     ],
-    domains: ["AI / GenAI", "Full-stack", "Developer tools"],
-    githubUrl: "https://github.com/ABHI-Theq/LiveCode",
-    liveUrl: "https://live-code-ss1v.vercel.app",
+    domains: ["AI / GenAI"],
+    githubUrl: "https://github.com/ABHI-Theq/Agios-AI_Blog_Writer",
     featured: true,
-    category: "tool",
+    image: "/projects/hitchai.png",
+    category: "ai",
   },
 
   // ── 03 Jerob ───────────────────────────────────────────────────
@@ -208,6 +209,69 @@ export const projects: Project[] = [
     githubUrl: "https://github.com/ABHI-Theq/Jerob-Personal_AI_Operator",
     liveUrl: "https://www.npmjs.com/package/jerob",
     featured: true,
+    image: "/projects/jerob.png",
+    category: "tool",
+  },
+
+  // ── LiveCode ────────────────────────────────────────────────
+  {
+    slug: "livecode",
+    title: "LiveCode",
+    tagline: "Browser IDE with local AI assistance",
+    description:
+      "In-browser code editor and project playground — Monaco editor, WebContainer Node.js runtime, and context-aware AI suggestions served locally through Ollama for privacy.",
+    problem:
+      "Setting up a development environment is a barrier. LiveCode runs the editor, the terminal and a Node.js runtime entirely in the browser, and keeps AI assistance local through Ollama.",
+    highlights: [
+      "Developed a real-time collaborative code editor using React, Node.js, and Socket.IO to handle bi-directional document sync across concurrent user sessions.",
+      "Integrated the remote Piston execution engine API to compile, execute, and stream output for 15+ programming languages in the browser.",
+      "Designed an event-driven backend state manager in Express.js to track room membership, handle dropped connections, and preserve state synchronization.",
+    ],
+    features: [
+      {
+        name: "Multi-template projects",
+        detail:
+          "Start from React, Next.js, Express, Vue, Angular, or Hono templates with automatic framework detection.",
+      },
+      {
+        name: "In-browser runtime",
+        detail:
+          "WebContainer provides a full Node.js environment, integrated terminal, and live preview — no server required.",
+      },
+      {
+        name: "Editor workspace",
+        detail:
+          "Monaco Editor with IntelliSense, a Radix UI file explorer (create, edit, delete, rename), and resizable panels.",
+      },
+      {
+        name: "AI code suggestions",
+        detail:
+          "Suggestions on typing, new lines, and trigger characters, framework-aware and togglable. Processing stays local through Ollama (CodeLlama).",
+      },
+      {
+        name: "Accounts and projects",
+        detail:
+          "GitHub and Google sign-in with NextAuth v5 and a dashboard to manage saved projects.",
+      },
+    ],
+    architecture:
+      "A Next.js App Router application whose API routes handle projects, templates, and the AI suggestion endpoint. Monaco Editor with a Zustand-managed AI overlay sits client-side; WebContainer runs the Node.js runtime in the browser. Ollama serves CodeLlama locally. Data persisted via Prisma ORM on PostgreSQL.",
+    tech: [
+      "Next.js 15",
+      "TypeScript",
+      "Monaco Editor",
+      "WebContainer",
+      "Ollama",
+      "CodeLlama",
+      "Prisma",
+      "PostgreSQL",
+      "NextAuth.js v5",
+      "Zustand",
+    ],
+    domains: ["AI / GenAI", "Full-stack", "Developer tools"],
+    githubUrl: "https://github.com/ABHI-Theq/LiveCode",
+    liveUrl: "https://live-code-ss1v.vercel.app",
+    featured: false,
     category: "tool",
   },
 
@@ -268,66 +332,6 @@ export const projects: Project[] = [
     liveUrl: "https://code-real-time-editor.vercel.app/",
     featured: false,
     category: "fullstack",
-  },
-
-  // ── 05 HitchAI (Agios) ────────────────────────────────────────
-  {
-    slug: "agios",
-    title: "HitchAI",
-    tagline: "Agentic technical blog generator",
-    description:
-      "Turns a single topic into a publication-ready technical blog post using a LangGraph multi-agent pipeline — adaptive research, parallel section writing, image generation, and format validation.",
-    problem:
-      "A single LLM call asked to research, plan, write, and format a long article tends to drift, repeat itself and be hard to debug. HitchAI splits the work into independent, typed stages so each step can be checked on its own.",
-    features: [
-      {
-        name: "Adaptive research",
-        detail:
-          "Router classifies the topic as closed_book, hybrid, or open_book and dispatches 3–10 Tavily search queries. Results are deduplicated by URL into a typed evidence pack.",
-      },
-      {
-        name: "Grounded parallel writing",
-        detail:
-          "LangGraph's Send API fans one worker out per section. Each worker only sees its own task and the evidence it is allowed to cite.",
-      },
-      {
-        name: "Deterministic reducer",
-        detail:
-          "A subgraph sorts and concatenates sections with plain code, then plans images, generates them, and validates the result — no LLM for the merge step.",
-      },
-      {
-        name: "Scarce, planned images",
-        detail:
-          "An image planner reads the whole article and chooses at most 3 diagrams; generation failures degrade to a visible warning, not a failed run.",
-      },
-      {
-        name: "Format-only validation",
-        detail:
-          "Gemini repairs unclosed code fences, heading levels, malformed tables, and raw LaTeX at temperature 0 under a no-content-changes contract.",
-      },
-      {
-        name: "Streamlit dashboard",
-        detail:
-          "Blog history, live progress, word count and reading time, preview, image gallery, and downloads — all backed by the file system.",
-      },
-    ],
-    architecture:
-      "Main LangGraph graph: Router (GPT-4.1 mini, structured output) → Research (Tavily) → Orchestrator (builds a 4–6 task Plan) → Workers (one section each via Send fan-out). Reducer subgraph: merge_content (no LLM) → decide_images (GPT-4.1 mini) → generate_and_place_images (GPT Image 1) → markdown_validator (Gemini). Typed state: Plan, Task, EvidenceItem, EvidencePack, RouterDecision, GlobalImagePlan.",
-    tech: [
-      "LangGraph",
-      "LangChain",
-      "GPT-4.1 mini",
-      "GPT Image 1",
-      "Gemini",
-      "Tavily Search",
-      "Pydantic",
-      "Python 3.11",
-      "Streamlit",
-    ],
-    domains: ["AI / GenAI"],
-    githubUrl: "https://github.com/ABHI-Theq/Agios-AI_Blog_Writer",
-    featured: false,
-    category: "ai",
   },
 
   // ── 06 RanCC ──────────────────────────────────────────────────
